@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Core palette ─────────────────────────── */
+  --color-primary:       #2F5B2E;   /* forest green  */
+  --color-primary-light: #3d7a3c;
+  --color-secondary:     #7A4B2A;   /* earth brown   */
+  --color-accent:        #8A9A3A;   /* olive green   */
+  --color-background:    #F8F5EE;   /* warm parchment */
+  --color-surface:       #FFFFFF;
+  --color-border:        #E5DED2;
+
+  /* ── Feedback ─────────────────────────────── */
+  --color-warning:       #FDF3E3;
+  --color-warning-text:  #92640A;
+
+  /* ── Text ─────────────────────────────────── */
+  --color-text:          #2B2B2B;
+  --color-muted:         #6D6A65;
+
+  /* ── Typography ───────────────────────────── */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body:    "Manrope", system-ui, sans-serif;
+
+  /* ── Geometry ─────────────────────────────── */
+  --radius-card:  1.25rem;   /* 20px — soft, editorial */
+  --radius-btn:   1rem;      /* 16px */
+  --radius-input: 0.875rem;  /* 14px */
+  --radius-badge: 999px;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings default to body font — Playfair applied only via .font-display class or inline style */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-body);
+    font-weight: 700;
+  }
+}
+
+/* ── Utility for editorial / display type ──────────────────── */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ── Soft card shadow ───────────────────────────────────────── */
+.shadow-card {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-modal {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Custom scrollbar (webkit) ──────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
