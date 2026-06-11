@@ -7,7 +7,11 @@ export default function NuevoEventoPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Pass reset flag — the tipo page handles the actual reset
+    // Clear any stale persisted data from older app versions
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("plannia-onboarding");
+      localStorage.removeItem("plannia-tasks");
+    }
     router.replace("/onboarding/tipo?reset=1");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
