@@ -279,7 +279,7 @@ export default function ResumenPage() {
       {/* ── 4. Resumen financiero ── */}
       {displayBudget != null && (
         <div className="bg-white border border-border rounded-[var(--radius-card)] p-4">
-          <p className="text-xs font-bold text-primary uppercase tracking-wide mb-3">Resumen financiero</p>
+          <p className="text-base font-bold text-primary" style={{ fontFamily: "var(--font-display)" }}>Resumen financiero</p>
           <div className="grid grid-cols-2 gap-3">
             <FinRow label={hasCap ? "Presupuesto máximo" : "Presupuesto estimado"} value={formatSoles(displayBudget)} highlight />
             <FinRow label="Monto comprometido" value={formatSoles(committed)} />
@@ -293,7 +293,7 @@ export default function ResumenPage() {
       <div className="bg-white border border-border rounded-[var(--radius-card)] p-4">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div>
-            <p className="text-xs font-bold text-primary uppercase tracking-wide mb-0.5">Proveedores sugeridos</p>
+            <p className="text-base font-bold text-primary" style={{ fontFamily: "var(--font-display)" }}>Proveedores sugeridos</p>
             <p className="text-xs text-muted">
               {tasks.length > 0
                 ? `Encontramos proveedores para tus ${tasks.length} pendientes.`
@@ -327,7 +327,7 @@ export default function ResumenPage() {
 
       {/* ── 6. Indicadores del evento ── */}
       <div className="bg-white border border-border rounded-[var(--radius-card)] p-4">
-        <p className="text-xs font-bold text-primary uppercase tracking-wide mb-3">Tu evento en Plannia</p>
+        <p className="text-base font-bold text-primary mb-3" style={{ fontFamily: "var(--font-display)" }}>Tu evento en Plannia</p>
         <div className="grid grid-cols-3 gap-3">
           {[
             { icon: "✅", label: "Avance",       value: "0%",               sub: `0 de ${tasks.length} completados` },
