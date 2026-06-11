@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 export type EventCategory = "social" | "corporativo" | "masivo" | "otro";
 
@@ -77,37 +76,32 @@ const initialData: OnboardingData = {
   estimatedBudgetMax: 0,
 };
 
-export const useOnboardingStore = create<OnboardingStore>()(
-  persist(
-    (set) => ({
-      data: initialData,
-      setEventCategory: (category) =>
-        set((s) => ({ data: { ...s.data, eventCategory: category, eventType: null, eventTypeCustom: "" } })),
-      setEventType: (type, custom = "") =>
-        set((s) => ({ data: { ...s.data, eventType: type, eventTypeCustom: custom } })),
-      setEventName: (name) =>
-        set((s) => ({ data: { ...s.data, eventName: name } })),
-      setGuestCount: (count) =>
-        set((s) => ({ data: { ...s.data, guestCount: count } })),
-      setEventDate: (date, unknown = false) =>
-        set((s) => ({ data: { ...s.data, eventDate: date, unknownDate: unknown } })),
-      setCity: (city, isDestination = false) =>
-        set((s) => ({ data: { ...s.data, city, isDestinationEvent: isDestination } })),
-      toggleService: (service) =>
-        set((s) => {
-          const services = s.data.services.includes(service)
-            ? s.data.services.filter((sv) => sv !== service)
-            : [...s.data.services, service];
-          return { data: { ...s.data, services } };
-        }),
-      setBudget: (type, defined = undefined) =>
-        set((s) => ({ data: { ...s.data, budgetType: type, budgetDefined: defined ?? null } })),
-      setEstimatedBudget: (min, max) =>
-        set((s) => ({ data: { ...s.data, estimatedBudgetMin: min, estimatedBudgetMax: max } })),
-      reset: () => set({ data: initialData }),
-      loadSnapshot: (data) => set({ data }),
-      resetToInitial: () => set({ data: initialData }),
+export const useOnboardingStore = create<OnboardingStore>()((set) => ({
+  data: initialData,
+  setEventCategory: (category) =>
+    set((s) => ({ data: { ...s.data, eventCategory: category, eventType: null, eventTypeCustom: "" } })),
+  setEventType: (type, custom = "") =>
+    set((s) => ({ data: { ...s.data, eventType: type, eventTypeCustom: custom } })),
+  setEventName: (name) =>
+    set((s) => ({ data: { ...s.data, eventName: name } })),
+  setGuestCount: (count) =>
+    set((s) => ({ data: { ...s.data, guestCount: count } })),
+  setEventDate: (date, unknown = false) =>
+    set((s) => ({ data: { ...s.data, eventDate: date, unknownDate: unknown } })),
+  setCity: (city, isDestination = false) =>
+    set((s) => ({ data: { ...s.data, city, isDestinationEvent: isDestination } })),
+  toggleService: (service) =>
+    set((s) => {
+      const services = s.data.services.includes(service)
+        ? s.data.services.filter((sv) => sv !== service)
+        : [...s.data.services, service];
+      return { data: { ...s.data, services } };
     }),
-    { name: "plannia-onboarding" }
-  )
-);
+  setBudget: (type, defined = undefined) =>
+    set((s) => ({ data: { ...s.data, budgetType: type, budgetDefined: defined ?? null } })),
+  setEstimatedBudget: (min, max) =>
+    set((s) => ({ data: { ...s.data, estimatedBudgetMin: min, estimatedBudgetMax: max } })),
+  reset: () => set({ data: initialData }),
+  loadSnapshot: (data) => set({ data }),
+  resetToInitial: () => set({ data: initialData }),
+}));
