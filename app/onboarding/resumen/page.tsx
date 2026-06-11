@@ -303,7 +303,15 @@ export default function ResumenPage() {
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => requireAuth("proveedores")}
+            onClick={() => {
+              if (!requireAuth("proveedores")) return;
+              const params = new URLSearchParams();
+              if (services.length) params.set("categorias", services.join(","));
+              if (city) params.set("ciudad", city);
+              if (budgetDefined) params.set("precioMax", String(budgetDefined));
+              params.set("desde", "resumen");
+              router.push(`/marketplace?${params.toString()}`);
+            }}
             className="shrink-0 bg-primary text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-1.5"
           >
             Explorar proveedores <ArrowRight size={13} />
