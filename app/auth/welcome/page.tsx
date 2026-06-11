@@ -25,7 +25,7 @@ export default function WelcomePage() {
 
   function handleContinue(name: string) {
     setNickname(name);
-    router.push(from === "resumen" ? "/onboarding/resumen" : "/onboarding/tipo");
+    router.push(from === "resumen" ? "/onboarding/resumen" : "/onboarding/nuevo");
   }
 
   const inputClass =

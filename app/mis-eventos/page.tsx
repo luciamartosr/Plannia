@@ -38,7 +38,7 @@ export default function MisEventosPage() {
     eventsStore.clearActive();
     onboardingStore.resetToInitial();
     taskPlanStore.resetAll();
-    router.push("/onboarding/tipo");
+    router.push("/onboarding/nuevo");
   }
 
   function handleOpenEvent(event: StoredEvent) {
