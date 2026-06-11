@@ -25,18 +25,19 @@ export default function AuthGateModal({ onClose, context = "default" }: AuthGate
       style={{
         position: "fixed", inset: 0, zIndex: 9000,
         background: "rgba(0,0,0,0.45)",
-        display: "flex", alignItems: "flex-end", justifyContent: "center",
+        display: "flex", alignItems: "center", justifyContent: "center",
         backdropFilter: "blur(4px)",
+        padding: "16px",
       }}
       onClick={onClose}
     >
       <div
         style={{
           background: "#fff",
-          borderRadius: "24px 24px 0 0",
-          padding: "32px 28px 40px",
-          width: "100%", maxWidth: 480,
-          boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
+          borderRadius: "var(--radius-card)",
+          padding: "32px 28px",
+          width: "100%", maxWidth: 420,
+          boxShadow: "0 8px 40px rgba(0,0,0,0.18)",
           display: "flex", flexDirection: "column", gap: 20,
         }}
         onClick={(e) => e.stopPropagation()}

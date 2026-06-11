@@ -40,8 +40,8 @@ export default function RegisterPage() {
       setError(result.error ?? "Error al crear la cuenta.");
       return;
     }
-    if (from === "resumen" && onboardingData.eventType) {
-      createEvent(onboardingData);
+    if (from === "resumen") {
+      if (onboardingData.eventType) createEvent(onboardingData);
       router.push("/onboarding/resumen");
     } else {
       router.push("/auth/welcome");

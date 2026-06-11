@@ -270,7 +270,7 @@ export default function ResumenPage() {
 
           <div className="divide-y divide-border">
             {tasks.map((task) => (
-              <TaskRow key={task.id} task={task} hasCap={hasCap} onGate={() => requireAuth("checklist")} />
+              <TaskRow key={task.id} task={task} hasCap={hasCap} onGate={() => requireAuth("checklist")} taskId={task.id} session={!!session} />
             ))}
           </div>
         </div>
@@ -364,10 +364,17 @@ export default function ResumenPage() {
 
 // ── Sub-components ─────────────────────────────────────────────
 
-function TaskRow({ task, hasCap, onGate }: { task: EventTask; hasCap: boolean; onGate: () => void }) {
+function TaskRow({ task, hasCap, onGate, taskId, session }: { task: EventTask; hasCap: boolean; onGate: () => void; taskId: string; session: boolean }) {
+  const router = useRouter();
   const isComplete = task.status === "completado";
+
+  function handleClick() {
+    if (!session) { onGate(); return; }
+    router.push(`/dashboard/checklist?taskId=${taskId}`);
+  }
+
   return (
-    <button onClick={onGate} className="w-full px-4 py-3 flex items-start gap-3 hover:bg-primary/4 transition-colors bg-transparent border-none cursor-pointer text-left">
+    <button onClick={handleClick} className="w-full px-4 py-3 flex items-start gap-3 hover:bg-primary/4 transition-colors bg-transparent border-none cursor-pointer text-left">
       {/* Status icon */}
       <div className="mt-0.5 shrink-0">
         {isComplete

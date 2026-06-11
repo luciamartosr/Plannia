@@ -9,6 +9,7 @@ import {
   Bell, Info, Pencil, Building2, Star, X, TrendingUp,
   ShoppingBag, AlertCircle,
 } from "lucide-react";
+import { MOCK_PROVIDERS } from "@/lib/mockData";
 import Header from "@/components/ui/Header";
 import { formatSoles, estimateBudget } from "@/lib/budget";
 import { useUserStore } from "@/stores/user";
@@ -648,7 +649,7 @@ function ProvidersCard({
   city: string;
   budgetDefined: number | null | undefined;
 }) {
-  const [tab, setTab] = useState<"contratados" | "sugeridos">("contratados");
+  const [tab, setTab] = useState<"contratados" | "sugeridos">("sugeridos");
   const list = tab === "contratados" ? contractedProviders : suggestedProviders;
 
   return (
@@ -704,7 +705,15 @@ function ProvidersCard({
           {list.map((p) => (
             <div key={p.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
               <div className="flex items-center gap-2.5 min-w-0">
-                <span className="text-base shrink-0">{p.taskIcon}</span>
+                {(() => {
+                  const mp = MOCK_PROVIDERS.find((m) => m.business_name === p.name);
+                  return mp?.cover_photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={mp.cover_photo} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0" />
+                  ) : (
+                    <span className="text-base shrink-0">{p.taskIcon}</span>
+                  );
+                })()}
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-text truncate">{p.name}</p>
                   <p className="text-[10px] text-muted truncate">{p.taskName}</p>

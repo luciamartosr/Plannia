@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUserStore } from "@/stores/user";
 
 export default function WelcomePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
   const session = useUserStore((s) => s.session);
   const setNickname = useUserStore((s) => s.setNickname);
 
@@ -23,7 +25,7 @@ export default function WelcomePage() {
 
   function handleContinue(name: string) {
     setNickname(name);
-    router.push("/onboarding/tipo");
+    router.push(from === "resumen" ? "/onboarding/resumen" : "/onboarding/tipo");
   }
 
   const inputClass =

@@ -36,8 +36,8 @@ export default function LoginPage() {
       setError(result.error ?? "Error al iniciar sesión.");
       return;
     }
-    if (from === "resumen" && onboardingData.eventType) {
-      if (!activeEventId) createEvent(onboardingData);
+    if (from === "resumen") {
+      if (!activeEventId && onboardingData.eventType) createEvent(onboardingData);
       router.push("/onboarding/resumen");
     } else if (from === "dashboard") {
       router.push("/dashboard");
