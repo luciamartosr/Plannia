@@ -2,13 +2,20 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { useUserStore } from "@/stores/user";
+import { useEventsStore } from "@/stores/events";
+import { useOnboardingStore } from "@/stores/onboarding";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
   const login = useUserStore((s) => s.login);
+  const createEvent = useEventsStore((s) => s.createEvent);
+  const activeEventId = useEventsStore((s) => s.activeEventId);
+  const onboardingData = useOnboardingStore((s) => s.data);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +36,14 @@ export default function LoginPage() {
       setError(result.error ?? "Error al iniciar sesión.");
       return;
     }
-    router.push("/mis-eventos");
+    if (from === "resumen" && onboardingData.eventType) {
+      if (!activeEventId) createEvent(onboardingData);
+      router.push("/onboarding/resumen");
+    } else if (from === "dashboard") {
+      router.push("/dashboard");
+    } else {
+      router.push("/mis-eventos");
+    }
   }
 
   const inputClass =

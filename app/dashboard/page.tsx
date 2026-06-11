@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   CalendarDays, MapPin, Users, Clock, ArrowRight, ChevronRight,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import Header from "@/components/ui/Header";
 import { formatSoles, estimateBudget } from "@/lib/budget";
+import { useUserStore } from "@/stores/user";
 import { useOnboardingStore } from "@/stores/onboarding";
 import { useTaskPlanStore } from "@/stores/taskPlan";
 import { useGuestStore, Guest } from "@/stores/guests";
@@ -47,10 +49,16 @@ interface UpcomingPayment {
 
 // ─────────────────────────────────────────────────────────────
 export default function DashboardPage() {
+  const router = useRouter();
+  const session = useUserStore((s) => s.session);
   const { data } = useOnboardingStore();
   const { tasks, initTasks } = useTaskPlanStore();
   const { guests } = useGuestStore();
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!session) router.replace("/auth/login?from=dashboard");
+  }, [session, router]);
 
   const {
     eventName, eventType, eventTypeCustom, eventDate, unknownDate,

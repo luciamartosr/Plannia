@@ -18,6 +18,8 @@ import {
 import { differenceInDays, parseISO, format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Sparkles } from "lucide-react";
+import { useUserStore } from "@/stores/user";
+import AuthGateModal from "@/components/AuthGateModal";
 
 const EVENT_META: Record<string, { label: string; icon: string }> = {
   boda:                { label: "Boda",                  icon: "💍" },
@@ -48,6 +50,8 @@ export default function ResumenPage() {
   const router = useRouter();
   const { createEvent, activeEventId, syncOnboarding } = useEventsStore();
   const { data } = useOnboardingStore();
+  const session = useUserStore((s) => s.session);
+  const [gateContext, setGateContext] = useState<"dashboard" | "checklist" | "proveedores" | null>(null);
   const {
     eventType, eventTypeCustom, eventName, guestCount,
     eventDate, unknownDate, city, isDestinationEvent,
@@ -85,13 +89,18 @@ export default function ResumenPage() {
   }, []);
 
   function handleGoToDashboard() {
+    if (!session) { setGateContext("dashboard"); return; }
     if (activeEventId) {
       syncOnboarding(activeEventId, data);
-      router.push("/dashboard");
     } else {
       createEvent(data);
-      router.push("/dashboard");
     }
+    router.push("/dashboard");
+  }
+
+  function requireAuth(action: "dashboard" | "checklist" | "proveedores") {
+    if (!session) { setGateContext(action); return false; }
+    return true;
   }
 
   // Financial summary
@@ -100,6 +109,11 @@ export default function ResumenPage() {
 
   return (
     <>
+    {/* ── Auth gate modal ── */}
+    {gateContext && (
+      <AuthGateModal context={gateContext} onClose={() => setGateContext(null)} />
+    )}
+
     {/* ── Envelope intro animation (plays once on first arrival from onboarding) ── */}
     {showIntro && (
       <EnvelopeIntro
@@ -249,14 +263,14 @@ export default function ResumenPage() {
               </p>
               <p className="text-[10px] text-muted mt-0.5">{tasks.length} elementos · 0 completados</p>
             </div>
-            <Link href="/dashboard/checklist" className="text-xs font-semibold text-primary flex items-center gap-1 hover:underline">
+            <button onClick={() => requireAuth("checklist")} className="text-xs font-semibold text-primary flex items-center gap-1 hover:underline bg-transparent border-none cursor-pointer p-0">
               Ver todo <ChevronRight size={12} />
-            </Link>
+            </button>
           </div>
 
           <div className="divide-y divide-border">
             {tasks.map((task) => (
-              <TaskRow key={task.id} task={task} hasCap={hasCap} />
+              <TaskRow key={task.id} task={task} hasCap={hasCap} onGate={() => requireAuth("checklist")} />
             ))}
           </div>
         </div>
@@ -288,19 +302,12 @@ export default function ResumenPage() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <Link
-            href={(() => {
-              const params = new URLSearchParams();
-              if (services.length) params.set("categorias", services.join(","));
-              if (city) params.set("ciudad", city);
-              if (budgetDefined) params.set("precioMax", String(budgetDefined));
-              params.set("desde", "resumen");
-              return `/marketplace?${params.toString()}`;
-            })()}
+          <button
+            onClick={() => requireAuth("proveedores")}
             className="shrink-0 bg-primary text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-1.5"
           >
             Explorar proveedores <ArrowRight size={13} />
-          </Link>
+          </button>
           <div className="flex gap-2 overflow-hidden">
             {PROVIDER_IMAGES.map((src, i) => (
               // eslint-disable-next-line @next/next/no-img-element
@@ -349,10 +356,10 @@ export default function ResumenPage() {
 
 // ── Sub-components ─────────────────────────────────────────────
 
-function TaskRow({ task, hasCap }: { task: EventTask; hasCap: boolean }) {
+function TaskRow({ task, hasCap, onGate }: { task: EventTask; hasCap: boolean; onGate: () => void }) {
   const isComplete = task.status === "completado";
   return (
-    <Link href={`/dashboard/checklist?taskId=${task.id}`} className="px-4 py-3 flex items-start gap-3 hover:bg-primary/4 transition-colors">
+    <button onClick={onGate} className="w-full px-4 py-3 flex items-start gap-3 hover:bg-primary/4 transition-colors bg-transparent border-none cursor-pointer text-left">
       {/* Status icon */}
       <div className="mt-0.5 shrink-0">
         {isComplete
@@ -390,7 +397,7 @@ function TaskRow({ task, hasCap }: { task: EventTask; hasCap: boolean }) {
       </div>
 
       <ChevronRight size={14} className="text-muted shrink-0 mt-1" />
-    </Link>
+    </button>
   );
 }
 

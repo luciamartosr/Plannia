@@ -60,7 +60,7 @@ export default function HomePage() {
 
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 52, flexWrap: "wrap" }}>
                 <Link
-                  href="/onboarding/tipo"
+                  href="/onboarding/nuevo"
                   style={{
                     fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700,
                     color: "#fff", background: "var(--color-primary)",
@@ -218,7 +218,7 @@ export default function HomePage() {
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16 }}>
               {EVENTS.map((e, i) => (
-                <Link key={i} href="/onboarding/tipo" style={{ textDecoration: "none" }}>
+                <Link key={i} href="/onboarding/nuevo" style={{ textDecoration: "none" }}>
                   <div style={{
                     border: "1.5px solid var(--color-border)", borderRadius: "var(--radius-card)",
                     padding: "28px 24px 24px", cursor: "pointer",
@@ -250,7 +250,7 @@ export default function HomePage() {
             </p>
             <div style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap" }}>
               <Link
-                href="/onboarding/tipo"
+                href="/onboarding/nuevo"
                 style={{
                   fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 700,
                   color: "#fff", background: "var(--color-primary)",

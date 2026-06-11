@@ -2,13 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { useUserStore } from "@/stores/user";
+import { useEventsStore } from "@/stores/events";
+import { useOnboardingStore } from "@/stores/onboarding";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
   const register = useUserStore((s) => s.register);
+  const createEvent = useEventsStore((s) => s.createEvent);
+  const onboardingData = useOnboardingStore((s) => s.data);
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -34,7 +40,12 @@ export default function RegisterPage() {
       setError(result.error ?? "Error al crear la cuenta.");
       return;
     }
-    router.push("/auth/welcome");
+    if (from === "resumen" && onboardingData.eventType) {
+      createEvent(onboardingData);
+      router.push("/onboarding/resumen");
+    } else {
+      router.push("/auth/welcome");
+    }
   }
 
   const inputClass =
