@@ -1,9 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useOnboardingStore, EventCategory, EventType } from "@/stores/onboarding";
+import { useTaskPlanStore } from "@/stores/taskPlan";
 import ProgressBar from "@/components/ui/ProgressBar";
 import Button from "@/components/ui/Button";
 import { ArrowLeft } from "lucide-react";
@@ -38,13 +39,30 @@ const SUBTYPES: Record<EventCategory, { id: EventType; label: string; icon: stri
 };
 
 export default function TipoPage() {
-  const router = useRouter();
-  const { data, setEventCategory, setEventType, setEventName } = useOnboardingStore();
+  return <Suspense><TipoPageContent /></Suspense>;
+}
 
-  const [category, setCategory] = useState<EventCategory | null>(data.eventCategory);
-  const [subtype, setSubtype] = useState<EventType | null>(data.eventType);
-  const [custom, setCustom] = useState(data.eventTypeCustom);
-  const [eventName, setEventNameLocal] = useState(data.eventName);
+function TipoPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isReset = searchParams.get("reset") === "1";
+  const { data, setEventCategory, setEventType, setEventName, resetToInitial } = useOnboardingStore();
+  const resetTasks = useTaskPlanStore((s) => s.resetAll);
+
+  const [category, setCategory] = useState<EventCategory | null>(isReset ? null : data.eventCategory);
+  const [subtype, setSubtype] = useState<EventType | null>(isReset ? null : data.eventType);
+  const [custom, setCustom] = useState(isReset ? "" : data.eventTypeCustom);
+  const [eventName, setEventNameLocal] = useState(isReset ? "" : data.eventName);
+
+  useEffect(() => {
+    if (isReset) {
+      resetToInitial();
+      resetTasks();
+      // Remove the reset param from URL without triggering re-render
+      router.replace("/onboarding/tipo", { scroll: false });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function selectCategory(cat: EventCategory) {
     setCategory(cat);
