@@ -58,8 +58,6 @@ function TipoPageContent() {
     if (isReset) {
       resetToInitial();
       resetTasks();
-      // Remove the reset param from URL without triggering re-render
-      router.replace("/onboarding/tipo", { scroll: false });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
